@@ -70,7 +70,7 @@
 				sel.toSettings();
 
 			}
-			var boxClick = function(){
+			sel.boxClick = function(){
 				$('.drag').removeClass('sel');
 				obj.addClass('sel');
 				modif();
@@ -81,7 +81,7 @@
 			$('#container').prepend(obj);
 			obj.draggable({containment:"#container", scroll: false, drag: modif, stop: modif})
 				.resizable({resize: modif})
-				.bind('mousedown', boxClick);
+				.bind('mousedown', sel.boxClick);
 			sel.div = obj;
 			sel.box = box;
 			
@@ -98,16 +98,22 @@
 				if(name == '') name = 'box_'+this.num;
 				this.selectors[name] = obj;
 				obj.name = name;
-				obj.stayActive = function(oName){
-					list.current = list.selectors[oName];
-					$('#box-capt').html(oName);
+				obj.stayActive = function(name){
+					list.current = list.selectors[name];
+					$('#box-capt').html(name);
 				}
+				obj.boxClick();
 			},
 			del: function(name){
 				if(this.selectors[name]){
 					this.selectors[name].div.remove();
 					delete this.selectors[name];
 				}
+			},
+			setActive: function(name){
+				if(this.selectors[name]){
+					this.selectors[name].boxClick();
+				}			
 			}
 		}
 		
@@ -125,8 +131,11 @@
 			$('#del').click(function(){
 				list.del(list.current.name);
 			});
-			$('#canva').dblclick(function(){
-				list.add('', selector(10,10,100,100));
+			$('#canva').dblclick(function(e){
+				list.add('', selector(e.offsetX, e.offsetY, 80, 100));
+				
+				console.log();
+				
 			});			
 			$('#box-width, #box-height, #box-x, #box-y').change(function(){	
 				list.current.fromSettings();
