@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Game Editor</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" href="jquery-ui.css" />
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<script type="text/javascript" src="jquery-ui.min.js"></script>
+	
+
+</head>
+<body>
+	<div id="tools">
+		<h1 id="box-capt"></h1>
+		Width: <input type="number" id="box-width" min="0" value="0" > X: <input type="number" id="box-x" min="0" value="0" ><br />
+		Height: <input type="number" id="box-height" min="0" value="0" > Y: <input type="number" id="box-y" min="0" value="0" ><br />
+		<input type="button" id="del" value="delete" />
+	</div>
+	<div id="container">
+		<canvas width='800' height='600' id='canva'>Обновите браузер</canvas>
+	</div>
+	<script>
+		var example = document.getElementById("canva");
+		var ctx = example.getContext('2d');
+		
+		var box = { x:0, y:0, w:0, h:0 }
+		
+		
+		
+		ctx.fillStyle = "rgb(221, 255, 247)";
+		ctx.fillRect(0, 0, example.width, example.height);
+		ctx.strokeRect(0, 0, example.width, example.height);
+		
+		var img = new Image(); 
+		img.src = 'athena.png';
+
+		img.onload = function() {
+			var w = img.width;
+			var h = img.height;
+      		ctx.drawImage(img, 10, 10, w, h); 
+			 
+    	}
+		
+		
+		var selector = function(x,y,w,h){
+			var sel = {};
+			var obj = $('<div class="drag"></div>');
+			var box = {'x':x,'y':y,'w':w,'h':h};
+			sel.name = '';
+			
+			sel.toSettings = function(){
+				box.x = parseInt(obj.css('left'));
+				box.y = parseInt(obj.css('top'));
+				box.w = obj.width();
+				box.h = obj.height();
+				$('#box-width').val(box.w);
+				$('#box-height').val(box.h);
+				$('#box-x').val(box.x);
+				$('#box-y').val(box.y);			
+			}
+			sel.fromSettings = function(){
+				box.w = parseInt($('#box-width').val());
+				box.h = parseInt($('#box-height').val());
+				box.x = parseInt($('#box-x').val());
+				box.y = parseInt($('#box-y').val());
+				obj.width(box.w).height(box.h).css({'left': box.x+'px', 'top': box.y+'px'});			
+			}
+			var modif = function(){
+				sel.toSettings();
+
+			}
+			var boxClick = function(){
+				$('.drag').removeClass('sel');
+				obj.addClass('sel');
+				modif();
+				sel.stayActive(sel.name);
+			}
+			
+			obj.css({'left':x+'px', 'top':y+'px', 'width':w+'px', 'height':h+'px'})
+			$('#container').prepend(obj);
+			obj.draggable({containment:"#container", scroll: false, drag: modif, stop: modif})
+				.resizable({resize: modif})
+				.bind('mousedown', boxClick);
+			sel.div = obj;
+			sel.box = box;
+			
+
+			return sel;		
+		}
+		
+		var list = {
+			selectors: {},
+			current: {},
+			num:0,
+			add: function(name, obj){
+				this.num++;
+				if(name == '') name = 'box_'+this.num;
+				this.selectors[name] = obj;
+				obj.name = name;
+				obj.stayActive = function(oName){
+					list.current = list.selectors[oName];
+					$('#box-capt').html(oName);
+				}
+			},
+			del: function(name){
+				if(this.selectors[name]){
+					this.selectors[name].div.remove();
+					delete this.selectors[name];
+				}
+			}
+		}
+		
+		$(function(){
+				
+			
+			
+			function drawing(){
+
+				ctx.clearRect(400, 20, box.w, box.h);
+				ctx.drawImage(img, box.x, box.y, box.w, box.h,    400, 20, box.w,box.h);
+
+			}
+			
+			$('#del').click(function(){
+				list.del(list.current.name);
+			});
+			$('#canva').dblclick(function(){
+				list.add('', selector(10,10,100,100));
+			});			
+			$('#box-width, #box-height, #box-x, #box-y').change(function(){	
+				list.current.fromSettings();
+			});
+			
+			
+		
+		});
+		
+	</script>
+</body>
+</html>
