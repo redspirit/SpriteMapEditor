@@ -12,7 +12,6 @@
 </head>
 <body>
 	<div id="tools">
-		<h1>Tools</h1>
 		<div class="t-block">
 			<h2>Properties</h2>
 			Width: <input type="number" id="box-width" min="0" value="0" > X: <input type="number" id="box-x" min="0" value="0" ><br />
@@ -27,10 +26,11 @@
 			<br />
 			<br />
 			<br />
-			<br />
-			<br />
 		</div>
-		
+		<div class="t-block">
+			<h2>Preview</h2>
+			<canvas width='250' height='250' id='preview'></canvas>
+		</div>		
 	</div>
 	<div id="container">
 		<canvas width='800' height='600' id='canva'>Обновите браузер</canvas>
@@ -39,7 +39,8 @@
 		var example = document.getElementById("canva");
 		var ctx = example.getContext('2d');
 		
-		var box = { x:0, y:0, w:0, h:0 }
+		var preview = document.getElementById("preview");
+		var ctxp = preview.getContext('2d');
 		
 		
 		
@@ -53,7 +54,7 @@
 		img.onload = function() {
 			var w = img.width;
 			var h = img.height;
-      		ctx.drawImage(img, 10, 10, w, h); 
+      		ctx.drawImage(img, 0, 0, w, h); 
 			 
     	}
 		
@@ -79,17 +80,22 @@
 				box.h = parseInt($('#box-height').val());
 				box.x = parseInt($('#box-x').val());
 				box.y = parseInt($('#box-y').val());
-				obj.width(box.w).height(box.h).css({'left': box.x+'px', 'top': box.y+'px'});			
+				obj.width(box.w).height(box.h).css({'left': box.x+'px', 'top': box.y+'px'});
+				sel.drawing();				
 			}
 			var modif = function(){
 				sel.toSettings();
-
+				sel.drawing();
 			}
 			sel.boxClick = function(){
 				$('.drag').removeClass('sel');
 				obj.addClass('sel');
 				modif();
 				sel.stayActive(sel.name);
+			}
+			sel.drawing = function(){
+				ctxp.clearRect(0, 0, 250, 250);
+				ctxp.drawImage(img, box.x, box.y, box.w+2, box.h+2,    50, 50, box.w+2,box.h+2);
 			}
 			
 			obj.css({'left':x+'px', 'top':y+'px', 'width':w+'px', 'height':h+'px'})
@@ -134,14 +140,6 @@
 		
 		$(function(){
 				
-			
-			
-			function drawing(){
-
-				ctx.clearRect(400, 20, box.w, box.h);
-				ctx.drawImage(img, box.x, box.y, box.w, box.h,    400, 20, box.w,box.h);
-
-			}
 			
 			$('#del').click(function(){
 				list.del(list.current.name);

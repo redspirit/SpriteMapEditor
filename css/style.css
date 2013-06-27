@@ -9,6 +9,7 @@ h1{
 }
 h2{
 	font-size:18px;
+	margin: 3px 0;
 }
 #container{
 	position:absolute;
@@ -40,7 +41,10 @@ h2{
 #tools input[type=number]{
 	width:60px;
 }
-
+#preview{
+	width:250px;
+	height:250px;
+}
 .drag{
 	position:absolute;
 	top:0;
