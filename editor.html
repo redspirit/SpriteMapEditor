@@ -3,19 +3,34 @@
 <head>
 <meta charset="utf-8" />
 <title>Game Editor</title>
-	<link rel="stylesheet" type="text/css" href="style.css" />
-	<link rel="stylesheet" href="jquery-ui.css" />
-	<script type="text/javascript" src="jquery.min.js"></script>
-	<script type="text/javascript" src="jquery-ui.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
 	
 
 </head>
 <body>
 	<div id="tools">
-		<h1 id="box-capt"></h1>
-		Width: <input type="number" id="box-width" min="0" value="0" > X: <input type="number" id="box-x" min="0" value="0" ><br />
-		Height: <input type="number" id="box-height" min="0" value="0" > Y: <input type="number" id="box-y" min="0" value="0" ><br />
-		<input type="button" id="del" value="delete" />
+		<h1>Tools</h1>
+		<div class="t-block">
+			<h2>Properties</h2>
+			Width: <input type="number" id="box-width" min="0" value="0" > X: <input type="number" id="box-x" min="0" value="0" ><br />
+			Height: <input type="number" id="box-height" min="0" value="0" > Y: <input type="number" id="box-y" min="0" value="0" ><br />
+			Name: <input type="text" id="box-name" size="15" /> <input type="button" id="set-name" value="Save" /><br />
+			<input type="button" id="del" value="Delete box" />
+		</div>
+		<div class="t-block">
+			<h2>List</h2>
+			<br />
+			<br />
+			<br />
+			<br />
+			<br />
+			<br />
+			<br />
+		</div>
+		
 	</div>
 	<div id="container">
 		<canvas width='800' height='600' id='canva'>Обновите браузер</canvas>
@@ -100,7 +115,7 @@
 				obj.name = name;
 				obj.stayActive = function(name){
 					list.current = list.selectors[name];
-					$('#box-capt').html(name);
+					$('#box-name').val(name);
 				}
 				obj.boxClick();
 			},
