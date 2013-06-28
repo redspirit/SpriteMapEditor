@@ -21,11 +21,7 @@
 		</div>
 		<div class="t-block">
 			<h2>List</h2>
-			<br />
-			<br />
-			<br />
-			<br />
-			<br />
+			<select multiple id="listing"></select>
 		</div>
 		<div class="t-block">
 			<h2>Preview</h2>
@@ -49,7 +45,7 @@
 		ctx.strokeRect(0, 0, example.width, example.height);
 		
 		var img = new Image(); 
-		img.src = 'athena.png';
+		img.src = 'map.png';
 
 		img.onload = function() {
 			var w = img.width;
@@ -92,6 +88,7 @@
 				obj.addClass('sel');
 				modif();
 				sel.stayActive(sel.name);
+				list.selectList(sel.name);
 			}
 			sel.drawing = function(){
 				ctxp.clearRect(0, 0, 250, 250);
@@ -110,6 +107,7 @@
 			return sel;		
 		}
 		
+		var listing = document.querySelector('#listing').options;
 		var list = {
 			selectors: {},
 			current: {},
@@ -124,17 +122,39 @@
 					$('#box-name').val(name);
 				}
 				obj.boxClick();
+				this.showList();
+				this.selectList(name);
 			},
 			del: function(name){
 				if(this.selectors[name]){
 					this.selectors[name].div.remove();
 					delete this.selectors[name];
+					this.showList();
 				}
 			},
 			setActive: function(name){
 				if(this.selectors[name]){
 					this.selectors[name].boxClick();
+					this.selectList(name);
 				}			
+			},
+			showList: function(){
+				$('#listing').empty();
+				for(name in this.selectors){
+					var elem = $('<option value="'+name+'">'+name+'</option>');
+					$('#listing').append(elem);
+				}
+				
+			},
+			selectList: function(name){
+				for (var i = 0; i < listing.length; i++){
+					if(listing[i].value == name){
+						listing[i].selected = true;
+					} else {
+						listing[i].selected = false;					
+					}
+				}
+				
 			}
 		}
 		
@@ -154,7 +174,19 @@
 				list.current.fromSettings();
 			});
 			
+			//$( "#selectable" )
+			$( "#sortable" ).selectable({ tolerance: "fit" });
+			$( "#sortable" ).sortable();
 			
+			$('#listing').click(function(){
+				list.setActive(this.options[this.options.selectedIndex].value);
+			});			
+			$('#listing').keydown(function(){
+				for (var i = 0; i < listing.length; i++){
+					if(listing[i].selected) list.setActive(listing[i].value);
+				}
+				
+			});
 		
 		});
 		
