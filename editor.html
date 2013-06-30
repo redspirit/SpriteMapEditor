@@ -174,18 +174,10 @@
 				list.current.fromSettings();
 			});
 			
-			//$( "#selectable" )
-			$( "#sortable" ).selectable({ tolerance: "fit" });
-			$( "#sortable" ).sortable();
-			
 			$('#listing').click(function(){
 				list.setActive(this.options[this.options.selectedIndex].value);
-			});			
-			$('#listing').keydown(function(){
-				for (var i = 0; i < listing.length; i++){
-					if(listing[i].selected) list.setActive(listing[i].value);
-				}
-				
+			}).keyup(function(){
+				list.setActive(this.options[this.options.selectedIndex].value);
 			});
 		
 		});
