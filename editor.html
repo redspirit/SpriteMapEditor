@@ -7,8 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
-	
-
+	<script type="text/javascript" src="js/canvas2image.js"></script>
 </head>
 <body>
 	<div id="tools">
@@ -26,6 +25,7 @@
 		<div class="t-block">
 			<h2>Preview</h2>
 			<canvas width='250' height='250' id='preview'></canvas>
+			<input type="button" id="save-all" value="Save frame as PNG" />
 		</div>		
 	</div>
 	<div id="container">
@@ -178,6 +178,20 @@
 				list.setActive(this.options[this.options.selectedIndex].value);
 			}).keyup(function(){
 				list.setActive(this.options[this.options.selectedIndex].value);
+			});
+			
+			$('#save-all').click(function(){
+			
+				var t_canvas = document.createElement('canvas');
+				var mbox = list.current.box;
+				t_canvas.width = mbox.w;
+				t_canvas.height = mbox.h;
+				t_canvas.getContext('2d').drawImage(img, mbox.x, mbox.y, mbox.w+2, mbox.h+2,  0, 0, mbox.w+2,mbox.h+2);
+			
+				Canvas2Image.saveAsPNG(t_canvas);
+				
+				delete t_canvas;
+			
 			});
 		
 		});
